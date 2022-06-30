@@ -46,37 +46,37 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
     return 0;
 }
 
+static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+}
+
 void BTS7200_InitPort(enum BTS7200_PortType PortId)
 {
+    struct BTS7200_PortStateType *pPortId;
+    struct BTS7200_ChannelStateType *pChannelId;
+
     switch (PortId)
     {
     case BTS7200_PORT_U4100:
-        myStateInfo.U4100.OUT1.Level = BTS7200_CHANNEL_LOW;
-        myStateInfo.U4100.OUT1.DiagnosticResult = BTS7200_NORMAL;
-        myStateInfo.U4100.OUT1.DiagnosticDone = BTS7200_NO_DONE;
-
-        myStateInfo.U4100.OUT2.Level = BTS7200_CHANNEL_LOW;
-        myStateInfo.U4100.OUT2.DiagnosticResult = BTS7200_NORMAL;
-        myStateInfo.U4100.OUT2.DiagnosticDone = BTS7200_NO_DONE;
-
-        myStateInfo.U4100.InitInfo = BTS7200_PORT_INIT;
+        pPortId = &myStateInfo.U4100;
         break;
 
     case BTS7200_PORT_U4101:
-        myStateInfo.U4101.OUT1.Level = BTS7200_CHANNEL_LOW;
-        myStateInfo.U4101.OUT1.DiagnosticResult = BTS7200_NORMAL;
-        myStateInfo.U4101.OUT1.DiagnosticDone = BTS7200_NO_DONE;
-
-        myStateInfo.U4101.OUT2.Level = BTS7200_CHANNEL_LOW;
-        myStateInfo.U4101.OUT2.DiagnosticResult = BTS7200_NORMAL;
-        myStateInfo.U4101.OUT2.DiagnosticDone = BTS7200_NO_DONE;
-
-        myStateInfo.U4101.InitInfo = BTS7200_PORT_INIT;
+        pPortId = &myStateInfo.U4101;
         break;
 
     default:
         break;
     }
+    pPortId->OUT1.Level = BTS7200_CHANNEL_LOW;
+    pPortId->OUT1.DiagnosticResult = BTS7200_NORMAL;
+    pPortId->OUT1.DiagnosticDone = BTS7200_NO_DONE;
+
+    pPortId->OUT2.Level = BTS7200_CHANNEL_LOW;
+    pPortId->OUT2.DiagnosticResult = BTS7200_NORMAL;
+    pPortId->OUT2.DiagnosticDone = BTS7200_NO_DONE;
+
+    pPortId->InitInfo = BTS7200_PORT_INIT;
 
     BTS7200_IoOutput();
     return;
