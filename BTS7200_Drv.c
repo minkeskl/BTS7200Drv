@@ -26,8 +26,23 @@
 // low     high    OL      负载丢失
 // high    low     fault   输出短路
 // high    high    il/k    正常输出,可以计算电流
+
+unsigned char pinID[2][2] = {
+    //   port  U4100 U4101
+    //   OUT1
+    //   OUT2
+    1, 2,
+    3, 4};
+
+unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+    return pinID[PortId][ChannelId];
+}
+
 static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
 {
+    Dio_WriteChannel(BTS7200_GetPinId(PortId, ChannelId), Level);
+    return;
 }
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
