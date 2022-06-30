@@ -26,7 +26,7 @@
 // low     high    OL      负载丢失
 // high    low     fault   输出短路
 // high    high    il/k    正常输出,可以计算电流
-static BTS7200_IoOutput()
+static void BTS7200_IoOutput()
 {
 }
 
