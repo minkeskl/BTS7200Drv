@@ -21,13 +21,15 @@
 enum BTS7200_PortType
 {
     BTS7200_PORT_U4100 = 0x00,
-    BTS7200_PORT_U4101 = 0xFF,
+    BTS7200_PORT_U4101 = 0x01,
+    //BTS7200_PORT_ALL = 0xFF,
 };
 
 enum BTS7200_ChannelType
 {
     BTS7200_CHANNEL_OUT1 = 0x00,
-    BTS7200_CHANNEL_OUT2 = 0xFF,
+    BTS7200_CHANNEL_OUT2 = 0x01,
+    //BTS7200_CHANNEL_ALL = 0xFF,
 };
 
 enum BTS7200_LevelType
@@ -60,6 +62,7 @@ enum BTS7200_DiagnosticDoneType
 
 struct BTS7200_ChannelStateType
 {
+    enum BTS7200_ChannelType ChannelId;
     enum BTS7200_LevelType Level;
     enum BTS7200_DiagnosticResultType DiagnosticResult;
     enum BTS7200_DiagnosticDoneType DiagnosticDone;
@@ -67,6 +70,7 @@ struct BTS7200_ChannelStateType
 
 struct BTS7200_PortStateType
 {
+    enum BTS7200_PortType PortId;
     enum BTS7200_InitType InitInfo;
     struct BTS7200_ChannelStateType OUT1;
     struct BTS7200_ChannelStateType OUT2;
