@@ -80,12 +80,12 @@ struct BTS7200_StateInfoType
 
 static struct BTS7200_StateInfoType myStateInfo;
 
-void BTS7200_InitPort(enum BTS7200_PortType PortId,struct BTS7200_StateInfoType *State);
+void BTS7200_InitPort(enum BTS7200_PortType PortId);
 
-void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId,struct BTS7200_StateInfoType *State);
+void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
-void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId,struct BTS7200_StateInfoType *State);
+void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
-void BTS7200_Diagnostic(struct BTS7200_StateInfoType *State);
+void BTS7200_Diagnostic();
 
 #endif
