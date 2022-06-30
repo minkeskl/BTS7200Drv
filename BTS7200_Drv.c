@@ -1,9 +1,8 @@
 #include "BTS7200_Drv.h"
-//KILIS~~670
-//DEN  high 测量开启
-//DSEL low  测量输出0
-//     high 测量输出1
-
+// KILIS~~670
+// DEN  high 测量开启
+// DSEL low  测量输出0
+//      high 测量输出1
 
 //最基本的是 正常使用情况下,is=il/kilis
 //开关延时
@@ -27,18 +26,19 @@
 // low     high    OL      负载丢失
 // high    low     fault   输出短路
 // high    high    il/k    正常输出,可以计算电流
-static BTS7200_IoOutput(){
-    
+static BTS7200_IoOutput()
+{
 }
 
-static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId){
+static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
+{
     switch (PortId)
     {
     case BTS7200_PORT_U4100:
-            return myStateInfo.U4100.InitInfo;
+        return myStateInfo.U4100.InitInfo;
         break;
     case BTS7200_PORT_U4101:
-            return myStateInfo.U4101.InitInfo;
+        return myStateInfo.U4101.InitInfo;
         break;
     default:
         break;
@@ -46,31 +46,32 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId){
     return 0;
 }
 
-void BTS7200_InitPort(enum BTS7200_PortType PortId){
+void BTS7200_InitPort(enum BTS7200_PortType PortId)
+{
     switch (PortId)
     {
     case BTS7200_PORT_U4100:
-            myStateInfo.U4100.OUT1.Level=BTS7200_CHANNEL_LOW;
-            myStateInfo.U4100.OUT1.DiagnosticResult=BTS7200_NORMAL;
-            myStateInfo.U4100.OUT1.DiagnosticDone=BTS7200_NO_DONE;
+        myStateInfo.U4100.OUT1.Level = BTS7200_CHANNEL_LOW;
+        myStateInfo.U4100.OUT1.DiagnosticResult = BTS7200_NORMAL;
+        myStateInfo.U4100.OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-            myStateInfo.U4100.OUT2.Level=BTS7200_CHANNEL_LOW;
-            myStateInfo.U4100.OUT2.DiagnosticResult=BTS7200_NORMAL;
-            myStateInfo.U4100.OUT2.DiagnosticDone=BTS7200_NO_DONE;
+        myStateInfo.U4100.OUT2.Level = BTS7200_CHANNEL_LOW;
+        myStateInfo.U4100.OUT2.DiagnosticResult = BTS7200_NORMAL;
+        myStateInfo.U4100.OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
-            myStateInfo.U4100.InitInfo=BTS7200_PORT_INIT;
+        myStateInfo.U4100.InitInfo = BTS7200_PORT_INIT;
         break;
 
     case BTS7200_PORT_U4101:
-            myStateInfo.U4101.OUT1.Level=BTS7200_CHANNEL_LOW;
-            myStateInfo.U4101.OUT1.DiagnosticResult=BTS7200_NORMAL;
-            myStateInfo.U4101.OUT1.DiagnosticDone=BTS7200_NO_DONE;
+        myStateInfo.U4101.OUT1.Level = BTS7200_CHANNEL_LOW;
+        myStateInfo.U4101.OUT1.DiagnosticResult = BTS7200_NORMAL;
+        myStateInfo.U4101.OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-            myStateInfo.U4101.OUT2.Level=BTS7200_CHANNEL_LOW;
-            myStateInfo.U4101.OUT2.DiagnosticResult=BTS7200_NORMAL;
-            myStateInfo.U4101.OUT2.DiagnosticDone=BTS7200_NO_DONE;
+        myStateInfo.U4101.OUT2.Level = BTS7200_CHANNEL_LOW;
+        myStateInfo.U4101.OUT2.DiagnosticResult = BTS7200_NORMAL;
+        myStateInfo.U4101.OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
-            myStateInfo.U4101.InitInfo=BTS7200_PORT_INIT;
+        myStateInfo.U4101.InitInfo = BTS7200_PORT_INIT;
         break;
 
     default:
@@ -78,33 +79,101 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId){
     }
 
     BTS7200_IoOutput();
-
+    return;
 }
 
+void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+    struct BTS7200_PortStateType *pPortId;
+    struct BTS7200_ChannelStateType *pChannelId;
 
-
-void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId){
-    //判断初始化
-    //信息结构体设置
-    //输出
-    if(BTS7200_IsInit(PortId)!=BTS7200_PORT_INIT){
+    if (BTS7200_IsInit(PortId) != BTS7200_PORT_INIT)
+    {
         return;
     }
 
+    switch (PortId)
+    {
+    case BTS7200_PORT_U4100:
+        pPortId = &myStateInfo.U4100;
+        break;
+
+    case BTS7200_PORT_U4101:
+        pPortId = &myStateInfo.U4101;
+        break;
+
+    default:
+        return;
+        break;
+    }
+
+    switch (ChannelId)
+    {
+    case BTS7200_CHANNEL_OUT1:
+        pChannelId = &(pPortId->OUT1);
+        break;
+
+    case BTS7200_CHANNEL_OUT2:
+        pChannelId = &(pPortId->OUT2);
+        break;
+
+    default:
+        return;
+        break;
+    }
+
+    pChannelId->Level = BTS7200_CHANNEL_HIGH;
+
     BTS7200_IoOutput();
+    return;
 }
 
-void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId){
-    //判断初始化
-    //信息结构体设置
-    //输出
-    if(BTS7200_IsInit(PortId)!=BTS7200_PORT_INIT){
+void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+    struct BTS7200_PortStateType *pPortId;
+    struct BTS7200_ChannelStateType *pChannelId;
+
+    if (BTS7200_IsInit(PortId) != BTS7200_PORT_INIT)
+    {
         return;
     }
-    
+
+    switch (PortId)
+    {
+    case BTS7200_PORT_U4100:
+        pPortId = &myStateInfo.U4100;
+        break;
+
+    case BTS7200_PORT_U4101:
+        pPortId = &myStateInfo.U4101;
+        break;
+
+    default:
+        return;
+        break;
+    }
+
+    switch (ChannelId)
+    {
+    case BTS7200_CHANNEL_OUT1:
+        pChannelId = &(pPortId->OUT1);
+        break;
+
+    case BTS7200_CHANNEL_OUT2:
+        pChannelId = &(pPortId->OUT2);
+        break;
+
+    default:
+        return;
+        break;
+    }
+
+    pChannelId->Level = BTS7200_CHANNEL_LOW;
+
     BTS7200_IoOutput();
+    return;
 }
 
-void BTS7200_Diagnostic(){
-
+void BTS7200_Diagnostic()
+{
 }
