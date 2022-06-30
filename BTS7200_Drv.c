@@ -27,7 +27,9 @@
 // high    low     fault   输出短路
 // high    high    il/k    正常输出,可以计算电流
 
-unsigned char pinID[2][2] = {
+#include "IO.h"
+
+unsigned char pinIDMat[2][2] = {
     //   port  U4100 U4101
     //   OUT1
     //   OUT2
@@ -36,7 +38,7 @@ unsigned char pinID[2][2] = {
 
 unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
 {
-    return pinID[PortId][ChannelId];
+    return pinIDMat[PortId][ChannelId];
 }
 
 static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
