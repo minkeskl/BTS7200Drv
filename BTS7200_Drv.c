@@ -26,9 +26,8 @@
 // low     high    OL      负载丢失
 // high    low     fault   输出短路
 // high    high    il/k    正常输出,可以计算电流
-static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
 {
-
 }
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
@@ -49,6 +48,7 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
 
 static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
 {
+    //进行诊断信息的返回
 }
 
 void BTS7200_InitPort(enum BTS7200_PortType PortId)
@@ -59,31 +59,31 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId)
     {
     case BTS7200_PORT_U4100:
         pPortId = &myStateInfo.U4100;
-        pPortId->PortId=BTS7200_PORT_U4100;
+        pPortId->PortId = BTS7200_PORT_U4100;
         break;
 
     case BTS7200_PORT_U4101:
         pPortId = &myStateInfo.U4101;
-        pPortId->PortId=BTS7200_PORT_U4101;
+        pPortId->PortId = BTS7200_PORT_U4101;
         break;
 
     default:
         break;
     }
-    pPortId->OUT2.ChannelId=BTS7200_CHANNEL_OUT1;
+    pPortId->OUT1.ChannelId = BTS7200_CHANNEL_OUT1;
     pPortId->OUT1.Level = BTS7200_CHANNEL_LOW;
     pPortId->OUT1.DiagnosticResult = BTS7200_NORMAL;
     pPortId->OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-    pPortId->OUT2.ChannelId=BTS7200_CHANNEL_OUT2;
+    pPortId->OUT2.ChannelId = BTS7200_CHANNEL_OUT2;
     pPortId->OUT2.Level = BTS7200_CHANNEL_LOW;
     pPortId->OUT2.DiagnosticResult = BTS7200_NORMAL;
     pPortId->OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
     pPortId->InitInfo = BTS7200_PORT_INIT;
 
-    BTS7200_IoOutput(pPortId->PortId,pPortId->OUT1.ChannelId);
-    BTS7200_IoOutput(pPortId->PortId,pPortId->OUT2.ChannelId);
+    BTS7200_IoOutput(pPortId->PortId, pPortId->OUT1.ChannelId, pPortId->OUT1.Level);
+    BTS7200_IoOutput(pPortId->PortId, pPortId->OUT2.ChannelId, pPortId->OUT2.Level);
     return;
 }
 
@@ -129,7 +129,7 @@ void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType 
 
     pChannelId->Level = BTS7200_CHANNEL_HIGH;
 
-    BTS7200_IoOutput(pPortId->PortId,pChannelId->ChannelId);
+    BTS7200_IoOutput(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
     return;
 }
 
@@ -175,7 +175,7 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
 
     pChannelId->Level = BTS7200_CHANNEL_LOW;
 
-    BTS7200_IoOutput(pPortId->PortId,pChannelId->ChannelId);
+    BTS7200_IoOutput(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
     return;
 }
 
@@ -184,5 +184,5 @@ void BTS7200_Diagnostic()
     //初始化判定
     //上次结果查验
     //更新数据
-
+    //周期50Hz
 }
