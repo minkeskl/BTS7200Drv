@@ -216,18 +216,18 @@ static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortT
     //进行诊断信息的返回
 }
 
-static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType pChannelId)
+static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType * pChannelId)
 {
 
     return;
 }
 
-static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType pPortId)
+static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType * pPortId)
 {
-    if(BTS7200_IsInit(pPortId.PortId)!=BTS7200_PORT_INIT){
+    if(BTS7200_IsInit(pPortId->PortId)!=BTS7200_PORT_INIT){
         return;
     }
-    BTS7200_DiagnosticChannel(pPortId.OUT1);
-    BTS7200_DiagnosticChannel(pPortId.OUT2);
+    BTS7200_DiagnosticChannel(&(pPortId->OUT1));
+    BTS7200_DiagnosticChannel(&(pPortId->OUT2));
     return;
 }
