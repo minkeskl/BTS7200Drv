@@ -251,13 +251,54 @@ static void BTS7200_DiagnosticChannel1()
     if (myStateInfo.InitInfo!=BTS7200_INIT){
         return;
     }
+
     if(myStateInfo.U4100.OUT1.Level==BTS7200_CHANNEL_LOW){
         BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
         DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
         IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+
+    }
+    else {
+        //BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+    }
+
+    if(myStateInfo.U4101.OUT1.Level==BTS7200_CHANNEL_LOW){
+        BTS7200_CtrlOut(BTS7200_PORT_U4101,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        DohValue=BTS7200_DohAdc(BTS7200_PORT_U4101);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4101);
+    }
+    else {
+        //BTS7200_CtrlOut(BTS7200_PORT_U4101,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        DohValue=BTS7200_DohAdc(BTS7200_PORT_U4101);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4101);
     }
 }
 
 static void BTS7200_DiagnosticChannel2()
 {
+    int IsValue=0;
+    if (myStateInfo.InitInfo!=BTS7200_INIT){
+        return;
+    }
+
+    if(myStateInfo.U4100.OUT1.Level==BTS7200_CHANNEL_LOW){
+        BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+        
+    }
+    else {
+        //BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+    }
+
+    if(myStateInfo.U4101.OUT1.Level==BTS7200_CHANNEL_LOW){
+        BTS7200_CtrlOut(BTS7200_PORT_U4101,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4101);
+    }
+    else {
+        //BTS7200_CtrlOut(BTS7200_PORT_U4101,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4101);
+    }
 }
