@@ -225,25 +225,29 @@ static void BTS7200_CtrlOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelTy
 
 static void BTS7200_DselOut(enum BTS7200_ChannelType ChannelId)
 {
-    if (ChannelId != BTS7200_CHANNEL_OUT1)
+    switch (ChannelId)
     {
+    case BTS7200_CHANNEL_OUT1:
         Dio_WriteChannel(DselPinIDMatrix, BTS7200_CHANNEL_LOW);
-    }
-    else
-    {
+        break;
+    case BTS7200_CHANNEL_OUT2:
         Dio_WriteChannel(DselPinIDMatrix, BTS7200_CHANNEL_HIGH);
+        break;
+    default:
+        break;
     }
     return;
 }
 
 static int BTS7200_ISAdc(enum BTS7200_PortType PortId)
 {
-    return 0;
+    return get_adc(IsPinIDMatrix[PortId]);
 }
 
 static int BTS7200_DohAdc(enum BTS7200_PortType PortId)
 {
-    return 0;
+    return get_adc(DohPinIDMatrix[PortId]);
+    //此处应该有一些基本的处理
 }
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
