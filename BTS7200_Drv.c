@@ -63,19 +63,19 @@ static void BTS7200_CtrlOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelTy
 
 static void BTS7200_DselOut(enum BTS7200_ChannelType ChannelId);
 
-static int BTS7200_ISAdc(enum BTS7200_PortType PortId);
+static int BTS7200_IsAdc(enum BTS7200_PortType PortId);
 
 static int BTS7200_DohAdc(enum BTS7200_PortType PortId);
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId);
 
-static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId);
 
-static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId);
 
-static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelId);
+static void BTS7200_DiagnosticChannel1();
 
-static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType *pPortId);
+static void BTS7200_DiagnosticChannel2();
+
+
 
 void BTS7200_InitPort(enum BTS7200_PortType PortId)
 {
@@ -207,8 +207,8 @@ void BTS7200_Diagnostic()
     //更新数据由channel做
     //周期50Hz
     // out1可以查验输出,channel去判断
-    BTS7200_DiagnosticPort(&(myStateInfo.U4100));
-    BTS7200_DiagnosticPort(&(myStateInfo.U4101));
+    BTS7200_DiagnosticChannel1();
+    BTS7200_DiagnosticChannel2();
 }
 
 static void BTS7200_InputOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
@@ -239,7 +239,7 @@ static void BTS7200_DselOut(enum BTS7200_ChannelType ChannelId)
     return;
 }
 
-static int BTS7200_ISAdc(enum BTS7200_PortType PortId)
+static int BTS7200_IsAdc(enum BTS7200_PortType PortId)
 {
     return get_adc(IsPinIDMatrix[PortId]);
 }
@@ -266,79 +266,12 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
     return 0;
 }
 
-static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId)
+static void BTS7200_DiagnosticChannel1()
 {
-    if (pChannelId->ChannelId == BTS7200_CHANNEL_OUT1)
-    {
-    }
-    else
-    {
-    }
-    pChannelId->DiagnosticDone = BTS7200_DONE_HIGH;
+
 }
 
-static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId)
+static void BTS7200_DiagnosticChannel2()
 {
-    pChannelId->DiagnosticDone = BTS7200_DONE_LOW;
-}
 
-static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelId)
-{
-    // switch (pChannelId->DiagnosticDone)
-    // {
-    // case BTS7200_NO_DONE:
-    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
-    //     }
-    //     else
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
-    //     }
-    //     break;
-    // case BTS7200_DONE_HIGH:
-    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
-    //     }
-    //     else
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
-    //     }
-    //     break;
-    // case BTS7200_DONE_LOW:
-    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
-    //     }
-    //     else
-    //     {
-    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
-    //     }
-    //     break;
-
-    // default:
-    //     break;
-    // }
-    if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
-    {
-        BTS7200_DiagnosticHighChannel(pChannelId);
-    }
-    else
-    {
-        BTS7200_DiagnosticLowChannel(pChannelId);
-    }
-}
-
-static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType *pPortId)
-{
-    if (BTS7200_IsInit(pPortId->PortId) != BTS7200_PORT_INIT)
-    {
-        pPortId->OUT1.DiagnosticResult = BTS7200_NOT_INIT;
-        pPortId->OUT2.DiagnosticResult = BTS7200_NOT_INIT;
-        return;
-    }
-    BTS7200_DiagnosticChannel(&(pPortId->OUT1));
-    BTS7200_DiagnosticChannel(&(pPortId->OUT2));
-    return;
 }
