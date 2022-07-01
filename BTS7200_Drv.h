@@ -40,8 +40,14 @@ enum BTS7200_LevelType
 
 enum BTS7200_InitType
 {
-    BTS7200_PORT_UNINIT = 0x00,
-    BTS7200_PORT_INIT = 0xFF,
+    BTS7200_UNINIT = 0x00,
+    BTS7200_INIT = 0xFF,
+};
+
+enum BTS7200_DselType
+{
+    BTS7200_CHANNEL1_LOW = 0x00,
+    BTS7200_CHANNEL2_HIGH = 0x01,
 };
 
 enum BTS7200_DiagnosticResultType
@@ -58,7 +64,7 @@ enum BTS7200_DiagnosticDoneType
     BTS7200_NO_DONE = 0x00,
     BTS7200_DONE_HIGH = 0x01,
     BTS7200_DONE_LOW = 0x02,
-//    BTS7200_DONE = 0x03,
+    //    BTS7200_DONE = 0x03,
 };
 
 struct BTS7200_ChannelStateType
@@ -72,20 +78,23 @@ struct BTS7200_ChannelStateType
 struct BTS7200_PortStateType
 {
     enum BTS7200_PortType PortId;
-    enum BTS7200_InitType InitInfo;
     struct BTS7200_ChannelStateType OUT1;
     struct BTS7200_ChannelStateType OUT2;
 };
 
 struct BTS7200_StateInfoType
 {
+    enum BTS7200_InitType InitInfo;
+    enum BTS7200_DselType DselInfo;
     struct BTS7200_PortStateType U4100;
     struct BTS7200_PortStateType U4101;
 };
 
 static struct BTS7200_StateInfoType myStateInfo = {
+    .InitInfo = BTS7200_UNINIT,
+    .DselInfo = BTS7200_CHANNEL1_LOW,
     .U4100 = {
-        .InitInfo = BTS7200_PORT_UNINIT,
+
         .PortId = BTS7200_PORT_U4100,
         .OUT1 = {
             .ChannelId = BTS7200_CHANNEL_OUT1,
@@ -101,7 +110,6 @@ static struct BTS7200_StateInfoType myStateInfo = {
         },
     },
     .U4101 = {
-        .InitInfo = BTS7200_PORT_UNINIT,
         .PortId = BTS7200_PORT_U4101,
         .OUT1 = {
             .ChannelId = BTS7200_CHANNEL_OUT1,
@@ -117,13 +125,12 @@ static struct BTS7200_StateInfoType myStateInfo = {
         },
     }};
 
-
 //函数名：  BTS7200_InitPort
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
 //输入参数：bm (表名）   待查找的 表的名字
 //          zdm (字段名）在表中待查找的字段
 //          zdz(字段值） 需要比较的字段的值
-//返回值：  
+//返回值：
 void BTS7200_InitPort(enum BTS7200_PortType PortId);
 
 //函数名：  BTS7200_OpenChannel
@@ -131,7 +138,7 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId);
 //输入参数：bm (表名）   待查找的 表的名字
 //          zdm (字段名）在表中待查找的字段
 //          zdz(字段值） 需要比较的字段的值
-//返回值：  
+//返回值：
 void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
 //函数名：  BTS7200_CloseChannel
@@ -139,13 +146,13 @@ void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType 
 //输入参数：bm (表名）   待查找的 表的名字
 //          zdm (字段名）在表中待查找的字段
 //          zdz(字段值） 需要比较的字段的值
-//返回值：  
+//返回值：
 void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
 //函数名：  BTS7200_Diagnostic
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
-//输入参数： 
-//返回值：  
+//输入参数：
+//返回值：
 void BTS7200_Diagnostic();
 
 #endif

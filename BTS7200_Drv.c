@@ -67,44 +67,31 @@ static int BTS7200_IsAdc(enum BTS7200_PortType PortId);
 
 static int BTS7200_DohAdc(enum BTS7200_PortType PortId);
 
-static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId);
-
-
-
 static void BTS7200_DiagnosticChannel1();
 
 static void BTS7200_DiagnosticChannel2();
 
-
-
-void BTS7200_InitPort(enum BTS7200_PortType PortId)
+void BTS7200_Init()
 {
-    struct BTS7200_PortStateType *pPortId;
+    myStateInfo.U4100.OUT1.DiagnosticResult = BTS7200_NORMAL;
+    myStateInfo.U4100.OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-    switch (PortId)
-    {
-    case BTS7200_PORT_U4100:
-        pPortId = &myStateInfo.U4100;
-        break;
+    myStateInfo.U4100.OUT2.DiagnosticResult = BTS7200_NORMAL;
+    myStateInfo.U4100.OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
-    case BTS7200_PORT_U4101:
-        pPortId = &myStateInfo.U4101;
-        break;
+    BTS7200_InputOut(myStateInfo.U4100.PortId, myStateInfo.U4100.OUT1.ChannelId, myStateInfo.U4100.OUT1.Level);
+    BTS7200_InputOut(myStateInfo.U4100.PortId, myStateInfo.U4100.OUT2.ChannelId, myStateInfo.U4100.OUT2.Level);
 
-    default:
-        break;
-    }
+    myStateInfo.U4101.OUT1.DiagnosticResult = BTS7200_NORMAL;
+    myStateInfo.U4101.OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-    pPortId->OUT1.DiagnosticResult = BTS7200_NORMAL;
-    pPortId->OUT1.DiagnosticDone = BTS7200_NO_DONE;
+    myStateInfo.U4101.OUT2.DiagnosticResult = BTS7200_NORMAL;
+    myStateInfo.U4101.OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
-    pPortId->OUT2.DiagnosticResult = BTS7200_NORMAL;
-    pPortId->OUT2.DiagnosticDone = BTS7200_NO_DONE;
+    BTS7200_InputOut(myStateInfo.U4101.PortId, myStateInfo.U4101.OUT1.ChannelId, myStateInfo.U4101.OUT1.Level);
+    BTS7200_InputOut(myStateInfo.U4101.PortId, myStateInfo.U4101.OUT2.ChannelId, myStateInfo.U4101.OUT2.Level);
 
-    pPortId->InitInfo = BTS7200_PORT_INIT;
-
-    BTS7200_InputOut(pPortId->PortId, pPortId->OUT1.ChannelId, pPortId->OUT1.Level);
-    BTS7200_InputOut(pPortId->PortId, pPortId->OUT2.ChannelId, pPortId->OUT2.Level);
+    myStateInfo.InitInfo = BTS7200_INIT;
     return;
 }
 
@@ -113,7 +100,7 @@ void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType 
     struct BTS7200_PortStateType *pPortId;
     struct BTS7200_ChannelStateType *pChannelId;
 
-    if (BTS7200_IsInit(PortId) != BTS7200_PORT_INIT)
+    if (myStateInfo.InitInfo != BTS7200_INIT)
     {
         return;
     }
@@ -159,7 +146,7 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
     struct BTS7200_PortStateType *pPortId;
     struct BTS7200_ChannelStateType *pChannelId;
 
-    if (BTS7200_IsInit(PortId) != BTS7200_PORT_INIT)
+    if (myStateInfo.InitInfo != BTS7200_INIT)
     {
         return;
     }
@@ -202,13 +189,20 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
 
 void BTS7200_Diagnostic()
 {
-    //初始化判定应该由port做
-    //上次结果查验也应该由channel做
-    //更新数据由channel做
-    //周期50Hz
-    // out1可以查验输出,channel去判断
-    BTS7200_DiagnosticChannel1();
-    BTS7200_DiagnosticChannel2();
+    //交替查询
+    switch (myStateInfo.DselInfo)
+    {
+    case BTS7200_CHANNEL1_LOW:
+        BTS7200_DiagnosticChannel1();
+        BTS7200_DselOut(BTS7200_CHANNEL_OUT2);
+        break;
+    case BTS7200_CHANNEL2_HIGH:
+        BTS7200_DiagnosticChannel2();
+        BTS7200_DselOut(BTS7200_CHANNEL_OUT1);
+        break;
+    default:
+        break;
+    }
 }
 
 static void BTS7200_InputOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
@@ -250,28 +244,12 @@ static int BTS7200_DohAdc(enum BTS7200_PortType PortId)
     //此处应该有一些基本的处理
 }
 
-static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
-{
-    switch (PortId)
-    {
-    case BTS7200_PORT_U4100:
-        return myStateInfo.U4100.InitInfo;
-        break;
-    case BTS7200_PORT_U4101:
-        return myStateInfo.U4101.InitInfo;
-        break;
-    default:
-        break;
-    }
-    return 0;
-}
-
 static void BTS7200_DiagnosticChannel1()
 {
-
+    myStateInfo.U4100.OUT1;
+    if (myStateInfo.InitInfo);
 }
 
 static void BTS7200_DiagnosticChannel2()
 {
-
 }
