@@ -57,7 +57,15 @@ unsigned int DohPinIDMatrix[2] = {
 
 static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
-static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
+static void BTS7200_InputOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
+
+static void BTS7200_CtrlOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
+
+static void BTS7200_DselOut(enum BTS7200_ChannelType ChannelId);
+
+static int BTS7200_ISAdc(enum BTS7200_PortType PortId);
+
+static int BTS7200_DohAdc(enum BTS7200_PortType PortId);
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId);
 
@@ -95,8 +103,8 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId)
 
     pPortId->InitInfo = BTS7200_PORT_INIT;
 
-    BTS7200_IoOutput(pPortId->PortId, pPortId->OUT1.ChannelId, pPortId->OUT1.Level);
-    BTS7200_IoOutput(pPortId->PortId, pPortId->OUT2.ChannelId, pPortId->OUT2.Level);
+    BTS7200_InputOut(pPortId->PortId, pPortId->OUT1.ChannelId, pPortId->OUT1.Level);
+    BTS7200_InputOut(pPortId->PortId, pPortId->OUT2.ChannelId, pPortId->OUT2.Level);
     return;
 }
 
@@ -142,7 +150,7 @@ void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType 
 
     pChannelId->Level = BTS7200_CHANNEL_HIGH;
 
-    BTS7200_IoOutput(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
+    BTS7200_InputOut(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
     return;
 }
 
@@ -188,7 +196,7 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
 
     pChannelId->Level = BTS7200_CHANNEL_LOW;
 
-    BTS7200_IoOutput(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
+    BTS7200_InputOut(pPortId->PortId, pChannelId->ChannelId, pChannelId->Level);
     return;
 }
 
@@ -203,15 +211,39 @@ void BTS7200_Diagnostic()
     BTS7200_DiagnosticPort(&(myStateInfo.U4101));
 }
 
-static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+static void BTS7200_InputOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
 {
-    return pinIDMat[PortId][ChannelId];
+    Dio_WriteChannel(InputPinIDMatrix[PortId][ChannelId], Level);
+    return;
 }
 
-static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
+static void BTS7200_CtrlOut(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
 {
-    Dio_WriteChannel(BTS7200_GetPinId(PortId, ChannelId), Level);
+    Dio_WriteChannel(CtrlPinIDMatrix[PortId][ChannelId], Level);
     return;
+}
+
+static void BTS7200_DselOut(enum BTS7200_ChannelType ChannelId)
+{
+    if (ChannelId != BTS7200_CHANNEL_OUT1)
+    {
+        Dio_WriteChannel(DselPinIDMatrix, BTS7200_CHANNEL_LOW);
+    }
+    else
+    {
+        Dio_WriteChannel(DselPinIDMatrix, BTS7200_CHANNEL_HIGH);
+    }
+    return;
+}
+
+static int BTS7200_ISAdc(enum BTS7200_PortType PortId)
+{
+    return 0;
+}
+
+static int BTS7200_DohAdc(enum BTS7200_PortType PortId)
+{
+    return 0;
 }
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
