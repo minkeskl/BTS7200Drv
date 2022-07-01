@@ -28,13 +28,32 @@
 // high    high    il/k    正常输出,可以计算电流
 
 #include "IO.h"
+#define DIO_NUM(x, y) ((x) << 8 + (y))
 
-unsigned char pinIDMat[2][2] = {
-    //   port  U4100 U4101
-    //   OUT1
-    //   OUT2
-    1, 2,
-    3, 4};
+unsigned int InputPinIDMatrix[2][2] = {
+    //   InputPinIDMatrix[BTS7200_PORT_U4100][BTS7200_CHANNEL_OUT1]
+    DIO_NUM(33, 0), DIO_NUM(33, 2),
+    DIO_NUM(33, 3), DIO_NUM(33, 4)};
+
+unsigned int DselPinIDMatrix = DIO_NUM(33, 10);
+//   DselPinIDMatrix
+
+unsigned int CtrlPinIDMatrix[2][2] = {
+    // CtrlPinIDMatrix[BTS7200_PORT_U4100][BTS7200_CHANNEL_OUT1]
+    DIO_NUM(33, 5), DIO_NUM(33, 6),
+    DIO_NUM(33, 7), DIO_NUM(20, 10)};
+
+unsigned int IsPinIDMatrix[2] = {
+    // IsPinIDMatrix[BTS7200_PORT_U4100]
+    11,
+    2,
+};
+
+unsigned int DohPinIDMatrix[2] = {
+    //   DohPinIDMatrix[BTS7200_PORT_U4100]
+    37,
+    38,
+};
 
 static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
@@ -211,14 +230,20 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
     return 0;
 }
 
-
-
-static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId){
-    pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
+static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId)
+{
+    if (pChannelId->ChannelId == BTS7200_CHANNEL_OUT1)
+    {
+    }
+    else
+    {
+    }
+    pChannelId->DiagnosticDone = BTS7200_DONE_HIGH;
 }
 
-static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId){
-    pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
+static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId)
+{
+    pChannelId->DiagnosticDone = BTS7200_DONE_LOW;
 }
 
 static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelId)
@@ -267,7 +292,6 @@ static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelI
     {
         BTS7200_DiagnosticLowChannel(pChannelId);
     }
-
 }
 
 static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType *pPortId)
