@@ -246,8 +246,16 @@ static int BTS7200_DohAdc(enum BTS7200_PortType PortId)
 
 static void BTS7200_DiagnosticChannel1()
 {
-    myStateInfo.U4100.OUT1;
-    if (myStateInfo.InitInfo);
+    int DohValue=0;
+    int IsValue=0;
+    if (myStateInfo.InitInfo!=BTS7200_INIT){
+        return;
+    }
+    if(myStateInfo.U4100.OUT1.Level==BTS7200_CHANNEL_LOW){
+        BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
+        DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
+        IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+    }
 }
 
 static void BTS7200_DiagnosticChannel2()

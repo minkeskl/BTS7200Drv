@@ -90,7 +90,23 @@ struct BTS7200_StateInfoType
     struct BTS7200_PortStateType U4101;
 };
 
-static struct BTS7200_StateInfoType myStateInfo = {
+struct BTS7200_PortDiagnosticType
+{
+    enum BTS7200_DiagnosticResultType OUT1Result;
+    enum BTS7200_DiagnosticResultType OUT2Result;
+};
+
+struct BTS7200_DiagnosticInfoType
+{
+    struct BTS7200_PortDiagnosticType U4100;
+    struct BTS7200_PortDiagnosticType U4101;
+};
+
+struct BTS7200_StateInfoType DiagnosticInfo={
+
+};
+
+struct BTS7200_StateInfoType myStateInfo = {
     .InitInfo = BTS7200_UNINIT,
     .DselInfo = BTS7200_CHANNEL1_LOW,
     .U4100 = {
