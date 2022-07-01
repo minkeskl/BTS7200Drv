@@ -117,12 +117,35 @@ static struct BTS7200_StateInfoType myStateInfo = {
         },
     }};
 
+
+//函数名：  BTS7200_InitPort
+//功能：    判断当前待插入或更新的记录在原表中是否已经存在
+//输入参数：bm (表名）   待查找的 表的名字
+//          zdm (字段名）在表中待查找的字段
+//          zdz(字段值） 需要比较的字段的值
+//返回值：  
 void BTS7200_InitPort(enum BTS7200_PortType PortId);
 
+//函数名：  BTS7200_OpenChannel
+//功能：    判断当前待插入或更新的记录在原表中是否已经存在
+//输入参数：bm (表名）   待查找的 表的名字
+//          zdm (字段名）在表中待查找的字段
+//          zdz(字段值） 需要比较的字段的值
+//返回值：  
 void BTS7200_OpenChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
+//函数名：  BTS7200_CloseChannel
+//功能：    判断当前待插入或更新的记录在原表中是否已经存在
+//输入参数：bm (表名）   待查找的 表的名字
+//          zdm (字段名）在表中待查找的字段
+//          zdz(字段值） 需要比较的字段的值
+//返回值：  
 void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
+//函数名：  BTS7200_Diagnostic
+//功能：    判断当前待插入或更新的记录在原表中是否已经存在
+//输入参数： 
+//返回值：  
 void BTS7200_Diagnostic();
 
 #endif

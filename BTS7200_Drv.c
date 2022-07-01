@@ -36,6 +36,7 @@ unsigned char pinIDMat[2][2] = {
     1, 2,
     3, 4};
 
+
 static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
 static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
@@ -65,13 +66,10 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId)
     default:
         break;
     }
-    pPortId->OUT1.ChannelId = BTS7200_CHANNEL_OUT1;
-    pPortId->OUT1.Level = BTS7200_CHANNEL_LOW;
+
     pPortId->OUT1.DiagnosticResult = BTS7200_NORMAL;
     pPortId->OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-    pPortId->OUT2.ChannelId = BTS7200_CHANNEL_OUT2;
-    pPortId->OUT2.Level = BTS7200_CHANNEL_LOW;
     pPortId->OUT2.DiagnosticResult = BTS7200_NORMAL;
     pPortId->OUT2.DiagnosticDone = BTS7200_NO_DONE;
 
@@ -232,7 +230,8 @@ static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType *pPortId)
 {
     if (BTS7200_IsInit(pPortId->PortId) != BTS7200_PORT_INIT)
     {
-        
+        pPortId->OUT1.DiagnosticResult=BTS7200_NOT_INIT;
+        pPortId->OUT2.DiagnosticResult=BTS7200_NOT_INIT;
         return;
     }
     BTS7200_DiagnosticChannel(&(pPortId->OUT1));
