@@ -36,37 +36,17 @@ unsigned char pinIDMat[2][2] = {
     1, 2,
     3, 4};
 
-unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
-{
-    return pinIDMat[PortId][ChannelId];
-}
+static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
-static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
-{
-    Dio_WriteChannel(BTS7200_GetPinId(PortId, ChannelId), Level);
-    return;
-}
+static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
 
-static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
-{
-    switch (PortId)
-    {
-    case BTS7200_PORT_U4100:
-        return myStateInfo.U4100.InitInfo;
-        break;
-    case BTS7200_PORT_U4101:
-        return myStateInfo.U4101.InitInfo;
-        break;
-    default:
-        break;
-    }
-    return 0;
-}
+static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId);
 
-static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
-{
-    //进行诊断信息的返回
-}
+static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
+
+static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType pChannelId);
+
+static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType pPortId);
 
 void BTS7200_InitPort(enum BTS7200_PortType PortId)
 {
@@ -76,12 +56,10 @@ void BTS7200_InitPort(enum BTS7200_PortType PortId)
     {
     case BTS7200_PORT_U4100:
         pPortId = &myStateInfo.U4100;
-        pPortId->PortId = BTS7200_PORT_U4100;
         break;
 
     case BTS7200_PORT_U4101:
         pPortId = &myStateInfo.U4101;
-        pPortId->PortId = BTS7200_PORT_U4101;
         break;
 
     default:
@@ -198,8 +176,58 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
 
 void BTS7200_Diagnostic()
 {
-    //初始化判定
+    //初始化判定应该由port做
+
     //上次结果查验
     //更新数据
     //周期50Hz
+    // out1可以查验输出
+}
+
+static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+    return pinIDMat[PortId][ChannelId];
+}
+
+static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level)
+{
+    Dio_WriteChannel(BTS7200_GetPinId(PortId, ChannelId), Level);
+    return;
+}
+
+static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
+{
+    switch (PortId)
+    {
+    case BTS7200_PORT_U4100:
+        return myStateInfo.U4100.InitInfo;
+        break;
+    case BTS7200_PORT_U4101:
+        return myStateInfo.U4101.InitInfo;
+        break;
+    default:
+        break;
+    }
+    return 0;
+}
+
+static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
+{
+    //进行诊断信息的返回
+}
+
+static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType pChannelId)
+{
+
+    return;
+}
+
+static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType pPortId)
+{
+    if(BTS7200_IsInit(pPortId.PortId)!=BTS7200_PORT_INIT){
+        return;
+    }
+    BTS7200_DiagnosticChannel(pPortId.OUT1);
+    BTS7200_DiagnosticChannel(pPortId.OUT2);
+    return;
 }

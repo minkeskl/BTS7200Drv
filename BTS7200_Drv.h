@@ -82,7 +82,28 @@ struct BTS7200_StateInfoType
     struct BTS7200_PortStateType U4101;
 };
 
-static struct BTS7200_StateInfoType myStateInfo;
+static struct BTS7200_StateInfoType myStateInfo={
+    .U4100={
+        .InitInfo=BTS7200_PORT_UNINIT,
+        .PortId=BTS7200_PORT_U4100,
+        .OUT1={
+            .ChannelId=BTS7200_CHANNEL_OUT1,
+        },
+        .OUT2={
+            .ChannelId=BTS7200_CHANNEL_OUT2,
+        },        
+    },
+        .U4101={
+        .InitInfo=BTS7200_PORT_UNINIT,
+        .PortId=BTS7200_PORT_U4101,
+        .OUT1={
+            .ChannelId=BTS7200_CHANNEL_OUT1,
+        },
+        .OUT2={
+            .ChannelId=BTS7200_CHANNEL_OUT2,
+        },        
+    }
+};
 
 void BTS7200_InitPort(enum BTS7200_PortType PortId);
 
