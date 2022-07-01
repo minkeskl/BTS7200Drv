@@ -56,9 +56,9 @@ enum BTS7200_DiagnosticResultType
 enum BTS7200_DiagnosticDoneType
 {
     BTS7200_NO_DONE = 0x00,
-    BTS7200_NO_DONE_HIGH = 0x01,
-    BTS7200_NO_DONE_LOW = 0x02,
-    BTS7200_DONE = 0x03,
+    BTS7200_DONE_HIGH = 0x01,
+    BTS7200_DONE_LOW = 0x02,
+//    BTS7200_DONE = 0x03,
 };
 
 struct BTS7200_ChannelStateType

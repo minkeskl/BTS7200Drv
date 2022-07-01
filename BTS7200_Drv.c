@@ -36,14 +36,15 @@ unsigned char pinIDMat[2][2] = {
     1, 2,
     3, 4};
 
-
 static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId);
 
 static void BTS7200_IoOutput(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId, enum BTS7200_LevelType Level);
 
 static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId);
 
-static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(struct BTS7200_ChannelStateType *pChannelId);
+static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId);
+
+static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId);
 
 static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelId);
 
@@ -175,15 +176,12 @@ void BTS7200_CloseChannel(enum BTS7200_PortType PortId, enum BTS7200_ChannelType
 void BTS7200_Diagnostic()
 {
     //初始化判定应该由port做
-
     //上次结果查验也应该由channel做
     //更新数据由channel做
     //周期50Hz
     // out1可以查验输出,channel去判断
     BTS7200_DiagnosticPort(&(myStateInfo.U4100));
     BTS7200_DiagnosticPort(&(myStateInfo.U4101));
-
-
 }
 
 static unsigned char BTS7200_GetPinId(enum BTS7200_PortType PortId, enum BTS7200_ChannelType ChannelId)
@@ -213,25 +211,71 @@ static enum BTS7200_InitType BTS7200_IsInit(enum BTS7200_PortType PortId)
     return 0;
 }
 
-static enum BTS7200_DiagnosticResultType BTS7200_IsDiagnostic(struct BTS7200_ChannelStateType *pChannelId)
-{
-    //进行诊断信息的返回
-    return pChannelId->DiagnosticResult;
 
+
+static void BTS7200_DiagnosticHighChannel(struct BTS7200_ChannelStateType *pChannelId){
+    pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
+}
+
+static void BTS7200_DiagnosticLowChannel(struct BTS7200_ChannelStateType *pChannelId){
+    pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
 }
 
 static void BTS7200_DiagnosticChannel(struct BTS7200_ChannelStateType *pChannelId)
 {
+    // switch (pChannelId->DiagnosticDone)
+    // {
+    // case BTS7200_NO_DONE:
+    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
+    //     }
+    //     else
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
+    //     }
+    //     break;
+    // case BTS7200_DONE_HIGH:
+    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
+    //     }
+    //     else
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
+    //     }
+    //     break;
+    // case BTS7200_DONE_LOW:
+    //     if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_HIGH;
+    //     }
+    //     else
+    //     {
+    //         pChannelId->DiagnosticDone=BTS7200_DONE_LOW;
+    //     }
+    //     break;
 
-    return;
+    // default:
+    //     break;
+    // }
+    if (pChannelId->Level == BTS7200_CHANNEL_HIGH)
+    {
+        BTS7200_DiagnosticHighChannel(pChannelId);
+    }
+    else
+    {
+        BTS7200_DiagnosticLowChannel(pChannelId);
+    }
+
 }
 
 static void BTS7200_DiagnosticPort(struct BTS7200_PortStateType *pPortId)
 {
     if (BTS7200_IsInit(pPortId->PortId) != BTS7200_PORT_INIT)
     {
-        pPortId->OUT1.DiagnosticResult=BTS7200_NOT_INIT;
-        pPortId->OUT2.DiagnosticResult=BTS7200_NOT_INIT;
+        pPortId->OUT1.DiagnosticResult = BTS7200_NOT_INIT;
+        pPortId->OUT2.DiagnosticResult = BTS7200_NOT_INIT;
         return;
     }
     BTS7200_DiagnosticChannel(&(pPortId->OUT1));
