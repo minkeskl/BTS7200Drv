@@ -28,7 +28,8 @@
 // high    high    il/k    正常输出,可以计算电流
 
 #include "IO.h"
-#define DIO_NUM(x, y) ((x) << 8 + (y))
+
+#define DIO_NUM(x, y) (((x) << 8) + (y))
 
 unsigned int InputPinIDMatrix[2][2] = {
     //   InputPinIDMatrix[BTS7200_PORT_U4100][BTS7200_CHANNEL_OUT1]
@@ -257,11 +258,25 @@ static void BTS7200_DiagnosticChannel1()
         DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
         IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
 
+        if(DohValue~GND)短接地;
+
+        if(IsValue~fault)高温
+
+        if(IsValue~oloff){
+            if(DohValue~Vs)短接电源
+            else if(DohValue~Vs)开路
+            else if(DohValue>Vs)逆电流
+            else 高温
+        }
+
+
     }
     else {
         //BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
         DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
         IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
+
+        
     }
 
     if(myStateInfo.U4101.OUT1.Level==BTS7200_CHANNEL_LOW){
