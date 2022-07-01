@@ -22,14 +22,14 @@ enum BTS7200_PortType
 {
     BTS7200_PORT_U4100 = 0x00,
     BTS7200_PORT_U4101 = 0x01,
-    //BTS7200_PORT_ALL = 0xFF,
+    // BTS7200_PORT_ALL = 0xFF,
 };
 
 enum BTS7200_ChannelType
 {
     BTS7200_CHANNEL_OUT1 = 0x00,
     BTS7200_CHANNEL_OUT2 = 0x01,
-    //BTS7200_CHANNEL_ALL = 0xFF,
+    // BTS7200_CHANNEL_ALL = 0xFF,
 };
 
 enum BTS7200_LevelType
@@ -50,14 +50,15 @@ enum BTS7200_DiagnosticResultType
     BTS7200_OVER_LOAD = 0x01,
     BTS7200_SHORT_CIRCUITED_12V = 0x02,
     BTS7200_SHORT_CIRCUITED_GND = 0x03,
+    BTS7200_NOT_INIT = 0x04,
 };
 
 enum BTS7200_DiagnosticDoneType
 {
-    BTS7200_NO_DONE=0x00,
-    BTS7200_NO_DONE_HIGH=0x01,
-    BTS7200_NO_DONE_LOW=0x02,
-    BTS7200_DONE=0x03,
+    BTS7200_NO_DONE = 0x00,
+    BTS7200_NO_DONE_HIGH = 0x01,
+    BTS7200_NO_DONE_LOW = 0x02,
+    BTS7200_DONE = 0x03,
 };
 
 struct BTS7200_ChannelStateType
@@ -82,28 +83,39 @@ struct BTS7200_StateInfoType
     struct BTS7200_PortStateType U4101;
 };
 
-static struct BTS7200_StateInfoType myStateInfo={
-    .U4100={
-        .InitInfo=BTS7200_PORT_UNINIT,
-        .PortId=BTS7200_PORT_U4100,
-        .OUT1={
-            .ChannelId=BTS7200_CHANNEL_OUT1,
+static struct BTS7200_StateInfoType myStateInfo = {
+    .U4100 = {
+        .InitInfo = BTS7200_PORT_UNINIT,
+        .PortId = BTS7200_PORT_U4100,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
         },
-        .OUT2={
-            .ChannelId=BTS7200_CHANNEL_OUT2,
-        },        
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
     },
-        .U4101={
-        .InitInfo=BTS7200_PORT_UNINIT,
-        .PortId=BTS7200_PORT_U4101,
-        .OUT1={
-            .ChannelId=BTS7200_CHANNEL_OUT1,
+    .U4101 = {
+        .InitInfo = BTS7200_PORT_UNINIT,
+        .PortId = BTS7200_PORT_U4101,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
         },
-        .OUT2={
-            .ChannelId=BTS7200_CHANNEL_OUT2,
-        },        
-    }
-};
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+    }};
 
 void BTS7200_InitPort(enum BTS7200_PortType PortId);
 
