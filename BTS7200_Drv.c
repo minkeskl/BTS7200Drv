@@ -303,6 +303,8 @@ static void BTS7200_DiagnosticChannel1()
         //     else if(DohValue>Vs)逆电流
         //     else 高温
         // }
+
+
     }
     else
     {
@@ -328,6 +330,7 @@ static void BTS7200_DiagnosticChannel1()
 static void BTS7200_DiagnosticChannel2()
 {
     int IsValue = 0;
+    
     if (myStateInfo.InitInfo != BTS7200_INIT)
     {
         return;
@@ -336,7 +339,10 @@ static void BTS7200_DiagnosticChannel2()
     if (myStateInfo.U4100.OUT1.Level == BTS7200_CHANNEL_LOW)
     {
         BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_HIGH);
+
+
         IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
+        BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_LOW);
     }
     else
     {
@@ -344,10 +350,15 @@ static void BTS7200_DiagnosticChannel2()
         IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
     }
 
+
     if (myStateInfo.U4101.OUT1.Level == BTS7200_CHANNEL_LOW)
     {
+
         BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_HIGH);
+
+
         IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
+        BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_LOW);
     }
     else
     {
