@@ -74,8 +74,8 @@ unsigned int DselPinIDMatrix = DIO_NUM(33, 10);
 
 unsigned int CtrlPinIDMatrix[2][2] = {
     // CtrlPinIDMatrix[BTS7200_PORT_U4100][BTS7200_CHANNEL_OUT1]
-    DIO_NUM(33, 5), DIO_NUM(33, 6),
-    DIO_NUM(33, 7), DIO_NUM(20, 10)};
+    {DIO_NUM(33, 5), DIO_NUM(33, 6)},
+    {DIO_NUM(33, 7), DIO_NUM(20, 10)}};
 
 unsigned int IsPinIDMatrix[2] = {
     // IsPinIDMatrix[BTS7200_PORT_U4100]
