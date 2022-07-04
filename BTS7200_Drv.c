@@ -258,16 +258,16 @@ static void BTS7200_DiagnosticChannel1()
         DohValue=BTS7200_DohAdc(BTS7200_PORT_U4100);
         IsValue=BTS7200_IsAdc(BTS7200_PORT_U4100);
 
-        if(DohValue~GND)短接地;
+        // if(DohValue~GND)短接地;
 
-        if(IsValue~fault)高温
+        // if(IsValue~fault)高温
 
-        if(IsValue~oloff){
-            if(DohValue~Vs)短接电源
-            else if(DohValue~Vs)开路
-            else if(DohValue>Vs)逆电流
-            else 高温
-        }
+        // if(IsValue~oloff){
+        //     if(DohValue~Vs)短接电源
+        //     else if(DohValue~Vs)开路
+        //     else if(DohValue>Vs)逆电流
+        //     else 高温
+        // }
 
 
     }
