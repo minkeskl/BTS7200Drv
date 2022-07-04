@@ -29,14 +29,45 @@
 
 #include "IO.h"
 
-#define DIO_NUM(x, y) (((x) << 8) + (y))
-#define DIO_NUM_PORT(x) (((x)&0xFFFF) >> 8)
-#define DIO_NUM_PIN(x) ((x)&0xFF)
+struct BTS7200_StateInfoType myStateInfo = {
+    .InitInfo = BTS7200_UNINIT,
+    .DselInfo = BTS7200_CHANNEL1_LOW,
+    .U4100 = {
+
+        .PortId = BTS7200_PORT_U4100,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+    },
+    .U4101 = {
+        .PortId = BTS7200_PORT_U4101,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .DiagnosticDone = BTS7200_NO_DONE,
+            .DiagnosticResult = BTS7200_NOT_INIT,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+    }};
 
 unsigned int InputPinIDMatrix[2][2] = {
     //   InputPinIDMatrix[BTS7200_PORT_U4100][BTS7200_CHANNEL_OUT1]
-    DIO_NUM(33, 0), DIO_NUM(33, 2),
-    DIO_NUM(33, 3), DIO_NUM(33, 4)};
+    {DIO_NUM(33, 0), DIO_NUM(33, 2)},
+    {DIO_NUM(33, 3), DIO_NUM(33, 4)}};
 
 unsigned int DselPinIDMatrix = DIO_NUM(33, 10);
 //   DselPinIDMatrix

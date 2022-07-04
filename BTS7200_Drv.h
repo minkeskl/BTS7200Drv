@@ -106,40 +106,7 @@ struct BTS7200_StateInfoType DiagnosticInfo={
 
 };
 
-struct BTS7200_StateInfoType myStateInfo = {
-    .InitInfo = BTS7200_UNINIT,
-    .DselInfo = BTS7200_CHANNEL1_LOW,
-    .U4100 = {
 
-        .PortId = BTS7200_PORT_U4100,
-        .OUT1 = {
-            .ChannelId = BTS7200_CHANNEL_OUT1,
-            .DiagnosticDone = BTS7200_NO_DONE,
-            .DiagnosticResult = BTS7200_NOT_INIT,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-        .OUT2 = {
-            .ChannelId = BTS7200_CHANNEL_OUT2,
-            .DiagnosticDone = BTS7200_NO_DONE,
-            .DiagnosticResult = BTS7200_NOT_INIT,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-    },
-    .U4101 = {
-        .PortId = BTS7200_PORT_U4101,
-        .OUT1 = {
-            .ChannelId = BTS7200_CHANNEL_OUT1,
-            .DiagnosticDone = BTS7200_NO_DONE,
-            .DiagnosticResult = BTS7200_NOT_INIT,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-        .OUT2 = {
-            .ChannelId = BTS7200_CHANNEL_OUT2,
-            .DiagnosticDone = BTS7200_NO_DONE,
-            .DiagnosticResult = BTS7200_NOT_INIT,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-    }};
 
 //函数名：  BTS7200_InitPort
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
@@ -147,7 +114,7 @@ struct BTS7200_StateInfoType myStateInfo = {
 //          zdm (字段名）在表中待查找的字段
 //          zdz(字段值） 需要比较的字段的值
 //返回值：
-void BTS7200_InitPort(enum BTS7200_PortType PortId);
+void BTS7200_Init();
 
 //函数名：  BTS7200_OpenChannel
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
