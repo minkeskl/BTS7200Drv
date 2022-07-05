@@ -283,6 +283,8 @@ void BTS7200_DiagnosticChannel1HighCtrl(enum BTS7200_PortType PortId)
     float IsValue = 0;
     DohValue = BTS7200_DohAdc(BTS7200_PORT_U4101);
     IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
+
+    
 }
 
 static void BTS7200_DiagnosticChannel1()
@@ -317,24 +319,33 @@ void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId)
 {
     float IsValue = 0;
     struct BTS7200_PortStateType *pPortId;
+    struct BTS7200_PortDiagnosticType *pDiagnosticPortId;
     if (PortId == BTS7200_PORT_U4100)
     {
         pPortId = &myStateInfo.U4100;
+        pDiagnosticPortId = &DiagnosticInfo.U4100;
     }
     else
     {
         pPortId = &myStateInfo.U4101;
+        pDiagnosticPortId = &DiagnosticInfo.U4101;
     }
-    if (pPortId->OUT1.Level == BTS7200_CHANNEL_LOW)
+    if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
     {
         IsValue = BTS7200_IsAdc(pPortId->PortId);
         //   1-2.6  2.6--4  4--5.7
         //如果在0.5--3.5,认为是短接电源,5.5周围认为是短接地
         if ((IsValue >= 0.5) && (IsValue <= 3.5))
         {
+            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_12V;
         }
         else if ((IsValue >= 4.5) && (IsValue <= 6))
         {
+            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
+        }
+        else
+        {
+            pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
         }
     }
     else
@@ -342,6 +353,18 @@ void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId)
         IsValue = BTS7200_IsAdc(pPortId->PortId);
         // 0--0.25 0.25-3  5.5
         // 0.25到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
+        if ((IsValue >= 0) && (IsValue <= 0.25))
+        {
+            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
+        }
+        else if ((IsValue >= 4.5) && (IsValue <= 6))
+        {
+            pDiagnosticPortId->OUT2Result = BTS7200_OVERCURRENT;
+        }
+        else
+        {
+            pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+        }
     }
 }
 
