@@ -107,20 +107,15 @@ static void BTS7200_DiagnosticChannel2();
 
 void BTS7200_Init()
 {
-    myStateInfo.U4100.OUT1.DiagnosticResult = BTS7200_NORMAL;
-    myStateInfo.U4100.OUT1.DiagnosticDone = BTS7200_NO_DONE;
 
-    myStateInfo.U4100.OUT2.DiagnosticResult = BTS7200_NORMAL;
-    myStateInfo.U4100.OUT2.DiagnosticDone = BTS7200_NO_DONE;
+    DiagnosticInfo.U4100.OUT1Result = BTS7200_NORMAL;
+    DiagnosticInfo.U4100.OUT2Result = BTS7200_NORMAL;
 
     BTS7200_InputOut(myStateInfo.U4100.PortId, myStateInfo.U4100.OUT1.ChannelId, myStateInfo.U4100.OUT1.Level);
     BTS7200_InputOut(myStateInfo.U4100.PortId, myStateInfo.U4100.OUT2.ChannelId, myStateInfo.U4100.OUT2.Level);
 
-    myStateInfo.U4101.OUT1.DiagnosticResult = BTS7200_NORMAL;
-    myStateInfo.U4101.OUT1.DiagnosticDone = BTS7200_NO_DONE;
-
-    myStateInfo.U4101.OUT2.DiagnosticResult = BTS7200_NORMAL;
-    myStateInfo.U4101.OUT2.DiagnosticDone = BTS7200_NO_DONE;
+    DiagnosticInfo.U4101.OUT1Result = BTS7200_NORMAL;
+    DiagnosticInfo.U4101.OUT2Result = BTS7200_NORMAL;
 
     BTS7200_InputOut(myStateInfo.U4101.PortId, myStateInfo.U4101.OUT1.ChannelId, myStateInfo.U4101.OUT1.Level);
     BTS7200_InputOut(myStateInfo.U4101.PortId, myStateInfo.U4101.OUT2.ChannelId, myStateInfo.U4101.OUT2.Level);

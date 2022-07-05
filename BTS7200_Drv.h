@@ -111,29 +111,14 @@ struct BTS7200_DiagnosticInfoType
 struct BTS7200_DiagnosticInfoType DiagnosticInfo = {
     .U4100 = {
 
-        .PortId = BTS7200_PORT_U4100,
-        .OUT1 = {
-            .ChannelId = BTS7200_CHANNEL_OUT1,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-        .OUT2 = {
-            .ChannelId = BTS7200_CHANNEL_OUT2,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
+        .OUT1Result = BTS7200_NOT_INIT,
+        .OUT1Result = BTS7200_NOT_INIT,
     },
     .U4101 = {
-        .PortId = BTS7200_PORT_U4101,
-        .OUT1 = {
-            .ChannelId = BTS7200_CHANNEL_OUT1,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-        .OUT2 = {
-            .ChannelId = BTS7200_CHANNEL_OUT2,
-            .Level = BTS7200_CHANNEL_LOW,
-        },
-    }
+        .OUT1Result = BTS7200_NOT_INIT,
+        .OUT1Result = BTS7200_NOT_INIT,
 
-};
+    }};
 
 //函数名：  BTS7200_InitPort
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
