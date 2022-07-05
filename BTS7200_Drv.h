@@ -18,6 +18,14 @@
 #ifndef BTS7200_DRV_H
 #define BTS7200_DRV_H
 
+#define V_IS_OLOFF_MAX 2.7
+#define V_IS_OLOFF_MIN 2.3
+
+#define V_IS_FAULT_MAX 6
+#define V_IS_FAULT_MIN 4
+
+
+
 enum BTS7200_PortType
 {
     BTS7200_PORT_U4100 = 0x00,
@@ -60,10 +68,12 @@ enum BTS7200_DiagnosticResultType
 {
     BTS7200_NORMAL = 0x00,
     BTS7200_OPEN_LOAD = 0x01,
-    BTS7200_SHORT_CIRCUITED_12V = 0x02,
+    BTS7200_SHORT_CIRCUITED_VS = 0x02,
     BTS7200_SHORT_CIRCUITED_GND = 0x03,
     BTS7200_NOT_INIT = 0x04,
     BTS7200_OVERCURRENT = 0x05,
+    BTS7200_UNKNOWN = 0x06,
+
 };
 
 enum BTS7200_DiagnosticDoneType
@@ -110,6 +120,18 @@ struct BTS7200_DiagnosticInfoType
 };
 
 struct BTS7200_DiagnosticInfoType DiagnosticInfo = {
+    .U4100 = {
+
+        .OUT1Result = BTS7200_NOT_INIT,
+        .OUT1Result = BTS7200_NOT_INIT,
+    },
+    .U4101 = {
+        .OUT1Result = BTS7200_NOT_INIT,
+        .OUT1Result = BTS7200_NOT_INIT,
+
+    }};
+
+struct BTS7200_DiagnosticInfoType lastDiagnosticInfo = {
     .U4100 = {
 
         .OUT1Result = BTS7200_NOT_INIT,

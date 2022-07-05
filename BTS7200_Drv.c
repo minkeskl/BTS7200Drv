@@ -272,151 +272,235 @@ static float BTS7200_DohAdc(enum BTS7200_PortType PortId)
     return get_adc(DohPinIDMatrix[PortId]);
     //此处应该有一些基本的处理,均值滤波之类的,数值转换为浮点
 }
+static void BTS7200_DiagnosticChannel1(){}
+static void BTS7200_DiagnosticChannel2(){}
 
-void BTS7200_DiagnosticChannel1LowCtrl(enum BTS7200_PortType PortId)
-{
-}
+// void BTS7200_DiagnosticChannel1LowCtrl(enum BTS7200_PortType PortId)
+// {
+// }
 
-void BTS7200_DiagnosticChannel1HighCtrl(enum BTS7200_PortType PortId)
-{
-    float DohValue = 0;
-    float IsValue = 0;
-    DohValue = BTS7200_DohAdc(BTS7200_PORT_U4101);
-    IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
+// void BTS7200_DiagnosticChannel1HighCtrl(enum BTS7200_PortType PortId)
+// {
+//     float DohValue = 0;
+//     float IsValue = 0;
 
-    
-}
+//     struct BTS7200_PortStateType *pPortId;
+//     struct BTS7200_PortDiagnosticType *pDiagnosticPortId;
+//     if (PortId == BTS7200_PORT_U4100)
+//     {
+//         pPortId = &myStateInfo.U4100;
+//         pDiagnosticPortId = &DiagnosticInfo.U4100;
+//     }
+//     else
+//     {
+//         pPortId = &myStateInfo.U4101;
+//         pDiagnosticPortId = &DiagnosticInfo.U4101;
+//     }
+//     if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         DohValue = BTS7200_DohAdc(pPortId->PortId);
+//         //如果在0.5--3.5,认为是短接电源,5.5周围认为是短接地
+//         if ((IsValue >= 0.5) && (IsValue <= 3.5))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_VS;
+//         }
+//         else if ((IsValue >= 4.5) && (IsValue <= 6))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+//         }
+//     }
+//     else
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         DohValue = BTS7200_DohAdc(pPortId->PortId);
+//         // 0.25到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
+//         if ((IsValue >= 0) && (IsValue <= 0.25))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
+//         }
+//         else if ((IsValue >= 4.5) && (IsValue <= 6))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OVERCURRENT;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+//         }
+//     }
+// }
 
-static void BTS7200_DiagnosticChannel1()
-{
+// static void BTS7200_DiagnosticChannel1()
+// {
 
-    static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
+//     static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
 
-    if (myStateInfo.InitInfo != BTS7200_INIT)
-    {
-        return;
-    }
+//     if (myStateInfo.InitInfo != BTS7200_INIT)
+//     {
+//         return;
+//     }
 
-    if (IsCtrlState == BTS7200_CHANNEL_LOW)
-    {
-        BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4100);
-        BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4101);
-        IsCtrlState = BTS7200_CHANNEL_HIGH;
-    }
-    else
-    {
+//     if (IsCtrlState == BTS7200_CHANNEL_LOW)
+//     {
+//         BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4100);
+//         BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4101);
+//         IsCtrlState = BTS7200_CHANNEL_HIGH;
+//     }
+//     else
+//     {
 
-        BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4100);
-        BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4101);
-        IsCtrlState = BTS7200_CHANNEL_LOW;
-    }
+//         BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4100);
+//         BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4101);
+//         IsCtrlState = BTS7200_CHANNEL_LOW;
+//     }
 
-    BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, IsCtrlState);
-    BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, IsCtrlState);
-}
+//     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, IsCtrlState);
+//     BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, IsCtrlState);
+// }
 
-void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId)
-{
-    float IsValue = 0;
-    struct BTS7200_PortStateType *pPortId;
-    struct BTS7200_PortDiagnosticType *pDiagnosticPortId;
-    if (PortId == BTS7200_PORT_U4100)
-    {
-        pPortId = &myStateInfo.U4100;
-        pDiagnosticPortId = &DiagnosticInfo.U4100;
-    }
-    else
-    {
-        pPortId = &myStateInfo.U4101;
-        pDiagnosticPortId = &DiagnosticInfo.U4101;
-    }
-    if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
-    {
-        IsValue = BTS7200_IsAdc(pPortId->PortId);
-        //   1-2.6  2.6--4  4--5.7
-        //如果在0.5--3.5,认为是短接电源,5.5周围认为是短接地
-        if ((IsValue >= 0.5) && (IsValue <= 3.5))
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_12V;
-        }
-        else if ((IsValue >= 4.5) && (IsValue <= 6))
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
-        }
-        else
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
-        }
-    }
-    else
-    {
-        IsValue = BTS7200_IsAdc(pPortId->PortId);
-        // 0--0.25 0.25-3  5.5
-        // 0.25到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
-        if ((IsValue >= 0) && (IsValue <= 0.25))
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
-        }
-        else if ((IsValue >= 4.5) && (IsValue <= 6))
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_OVERCURRENT;
-        }
-        else
-        {
-            pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
-        }
-    }
-}
+// void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId)
+// {
+//     float IsValue = 0;
+//     struct BTS7200_PortStateType *pPortId;
+//     struct BTS7200_PortDiagnosticType *pDiagnosticPortId;
+//     if (PortId == BTS7200_PORT_U4100)
+//     {
+//         pPortId = &myStateInfo.U4100;
+//         pDiagnosticPortId = &DiagnosticInfo.U4100;
+//     }
+//     else
+//     {
+//         pPortId = &myStateInfo.U4101;
+//         pDiagnosticPortId = &DiagnosticInfo.U4101;
+//     }
+//     if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         //如果在0.5--3.5,认为是短接电源,2.5这个值说明负载可能没了,5.5周围认为是短接地 
 
-void BTS7200_DiagnosticChannel2LowCtrl(enum BTS7200_PortType PortId)
-{
-    float IsValue = 0;
-    struct BTS7200_PortStateType *pPortId;
-    if (PortId == BTS7200_PORT_U4100)
-    {
-        pPortId = &myStateInfo.U4100;
-    }
-    else
-    {
-        pPortId = &myStateInfo.U4101;
-    }
-    if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
-    {
-        IsValue = BTS7200_IsAdc(pPortId->PortId);
-        // 0-1  1-2.6  2.6--4  4--5.7
-        //如果在0.5--3.5,认为是短接电源,其他情况认为正常
-    }
-    else
-    {
-        IsValue = BTS7200_IsAdc(pPortId->PortId);
-        // 0--0.25 0.25-3  5.5
-        // 0.25到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
-    }
-}
+//         if ((IsValue >= 2.3) && (IsValue < 2.7))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OPEN_LOAD;
+//         }
+//         else if ((IsValue >= 0.5) && (IsValue < 4))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_VS;
+//         }
+//         else if ((IsValue >= V_IS_FAULT_MIN) && (IsValue < V_IS_FAULT_MAX))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_GND;
+//         }
+//         else if ((IsValue >= 0) && (IsValue < 0.5))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_UNKNOWN;
+//         }
+//     }
+//     else
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         // 0.5到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
+//         if ((IsValue >= 0) && (IsValue < 0.25))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OPEN_LOAD;
+//         }
+//         else if ((IsValue >= V_IS_FAULT_MIN) && (IsValue < V_IS_FAULT_MAX))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OVERCURRENT;
+//         }
+//         else if ((IsValue >= 0.5) && (IsValue < 3))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_UNKNOWN;
+//         }
+//     }
+// }
 
-static void BTS7200_DiagnosticChannel2()
-{
-    static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
+// void BTS7200_DiagnosticChannel2LowCtrl(enum BTS7200_PortType PortId)
+// {
+//     float IsValue = 0;
+//     struct BTS7200_PortStateType *pPortId;
+//     struct BTS7200_PortDiagnosticType *pDiagnosticPortId;
+//     if (PortId == BTS7200_PORT_U4100)
+//     {
+//         pPortId = &myStateInfo.U4100;
+//         pDiagnosticPortId = &DiagnosticInfo.U4100;
+//     }
+//     else
+//     {
+//         pPortId = &myStateInfo.U4101;
+//         pDiagnosticPortId = &DiagnosticInfo.U4101;
+//     }
 
-    if (myStateInfo.InitInfo != BTS7200_INIT)
-    {
-        return;
-    }
+//     if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         //如果在0.5--3.5,认为是短接电源,其他情况认为正常
+//         if ((IsValue >= 0.5) && (IsValue <3.5))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_SHORT_CIRCUITED_VS;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_UNKNOWN;
+//         }
+//     }
+//     else
+//     {
+//         IsValue = BTS7200_IsAdc(pPortId->PortId);
+//         // 0.25到3认为正常,5.5左右认为过载,可能短路,0-0.25,开负载或短路电源
+//         if ((IsValue >= 0) && (IsValue < 0.25))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OPEN_LOAD;
+//         }
+//         else if ((IsValue >= V_IS_FAULT_MIN) && (IsValue < V_IS_FAULT_MAX))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_OVERCURRENT;
+//         }
+//         else if ((IsValue >= 0.25) && (IsValue < 3))
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_NORMAL;
+//         }
+//         else
+//         {
+//             pDiagnosticPortId->OUT2Result = BTS7200_UNKNOWN;
+//         }
+//     }
+// }
 
-    if (IsCtrlState == BTS7200_CHANNEL_LOW)
-    {
-        BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4100);
-        BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4101);
-        IsCtrlState = BTS7200_CHANNEL_HIGH;
-    }
-    else
-    {
+// static void BTS7200_DiagnosticChannel2()
+// {
+//     static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
 
-        BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4100);
-        BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4101);
-        IsCtrlState = BTS7200_CHANNEL_LOW;
-    }
+//     if (myStateInfo.InitInfo != BTS7200_INIT)
+//     {
+//         return;
+//     }
 
-    BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT2, IsCtrlState);
-    BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT2, IsCtrlState);
-}
+//     if (IsCtrlState == BTS7200_CHANNEL_LOW)
+//     {
+//         BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4100);
+//         BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4101);
+//         IsCtrlState = BTS7200_CHANNEL_HIGH;
+//     }
+//     else
+//     {
+
+//         BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4100);
+//         BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4101);
+//         IsCtrlState = BTS7200_CHANNEL_LOW;
+//     }
+
+//     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT2, IsCtrlState);
+//     BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT2, IsCtrlState);
+// }
