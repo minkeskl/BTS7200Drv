@@ -50,6 +50,12 @@ enum BTS7200_DselType
     BTS7200_CHANNEL2_HIGH = 0x01,
 };
 
+// enum BTS7200_CtrlType
+// {
+//     BTS7200_CTRL_LOW = 0x00,
+//     BTS7200_CTRL_HIGH = 0x01,
+// };
+
 enum BTS7200_DiagnosticResultType
 {
     BTS7200_NORMAL = 0x00,
