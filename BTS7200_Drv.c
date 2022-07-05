@@ -101,6 +101,10 @@ static int BTS7200_IsAdc(enum BTS7200_PortType PortId);
 
 static int BTS7200_DohAdc(enum BTS7200_PortType PortId);
 
+void BTS7200_DiagnosticChannel1HighCtrl(enum BTS7200_PortType PortId);
+
+void BTS7200_DiagnosticChannel1LowCtrl(enum BTS7200_PortType PortId);
+
 void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId);
 
 void BTS7200_DiagnosticChannel2LowCtrl(enum BTS7200_PortType PortId);
@@ -279,68 +283,25 @@ static int BTS7200_IsAdc(enum BTS7200_PortType PortId)
 static int BTS7200_DohAdc(enum BTS7200_PortType PortId)
 {
     return get_adc(DohPinIDMatrix[PortId]);
-    //此处应该有一些基本的处理
+    //此处应该有一些基本的处理,均值滤波之类的
+}
+
+void BTS7200_DiagnosticChannel1LowCtrl(enum BTS7200_PortType PortId){
+
+}
+
+void BTS7200_DiagnosticChannel1HighCtrl(enum BTS7200_PortType PortId){
+
 }
 
 static void BTS7200_DiagnosticChannel1()
 {
     int DohValue = 0;
     int IsValue = 0;
-    if (myStateInfo.InitInfo != BTS7200_INIT)
-    {
-        return;
-    }
+    DohValue = BTS7200_DohAdc(BTS7200_PORT_U4101);
+    IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
 
-    if (myStateInfo.U4100.OUT1.Level == BTS7200_CHANNEL_LOW)
-    {
-        BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_HIGH);
-        DohValue = BTS7200_DohAdc(BTS7200_PORT_U4100);
-        IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-
-        // if(DohValue~GND)短接地;
-
-        // if(IsValue~fault)高温
-
-        // if(IsValue~oloff){
-        //     if(DohValue~Vs)短接电源
-        //     else if(DohValue~Vs)开路
-        //     else if(DohValue>Vs)逆电流
-        //     else 高温
-        // }
-    }
-    else
-    {
-        // BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
-        DohValue = BTS7200_DohAdc(BTS7200_PORT_U4100);
-        IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-    }
-
-    if (myStateInfo.U4101.OUT1.Level == BTS7200_CHANNEL_LOW)
-    {
-        BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_HIGH);
-        DohValue = BTS7200_DohAdc(BTS7200_PORT_U4101);
-        IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-    }
-    else
-    {
-        // BTS7200_CtrlOut(BTS7200_PORT_U4101,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
-        DohValue = BTS7200_DohAdc(BTS7200_PORT_U4101);
-        IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-    }
-}
-
-void BTS7200_DiagnosticChannel2HighCtrl()
-{
-}
-
-void BTS7200_DiagnosticChannel2LowCtrl()
-{
-}
-
-static void BTS7200_DiagnosticChannel2()
-{
     static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
-    int IsValue = 0;
 
     if (myStateInfo.InitInfo != BTS7200_INIT)
     {
@@ -349,66 +310,89 @@ static void BTS7200_DiagnosticChannel2()
 
     if (IsCtrlState == BTS7200_CHANNEL_LOW)
     {
-        if (myStateInfo.U4100.OUT1.Level == BTS7200_CHANNEL_LOW)
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-        }
-        else
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-        }
-
-        if (myStateInfo.U4101.OUT1.Level == BTS7200_CHANNEL_LOW)
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-        }
-        else
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-        }
-
+        BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4100);
+        BTS7200_DiagnosticChannel1LowCtrl(BTS7200_PORT_U4101);
         IsCtrlState = BTS7200_CHANNEL_HIGH;
     }
     else
     {
-        if (myStateInfo.U4100.OUT1.Level == BTS7200_CHANNEL_LOW)
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-        }
-        else
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-        }
 
-        if (myStateInfo.U4101.OUT1.Level == BTS7200_CHANNEL_LOW)
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-        }
-        else
-        {
-            IsValue = BTS7200_IsAdc(BTS7200_PORT_U4101);
-        }
+        BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4100);
+        BTS7200_DiagnosticChannel1HighCtrl(BTS7200_PORT_U4101);
+        IsCtrlState = BTS7200_CHANNEL_LOW;
+    }
+
+    BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, IsCtrlState);
+    BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT1, IsCtrlState);
+}
+
+void BTS7200_DiagnosticChannel2HighCtrl(enum BTS7200_PortType PortId)
+{
+    int IsValue = 0;
+    struct BTS7200_PortStateType *pPortId;
+    if (PortId == BTS7200_PORT_U4100)
+    {
+        pPortId = &myStateInfo.U4100;
+    }
+    else
+    {
+        pPortId = &myStateInfo.U4101;
+    }
+    if (pPortId->OUT1.Level == BTS7200_CHANNEL_LOW)
+    {
+        IsValue = BTS7200_IsAdc(pPortId->PortId);
+    }
+    else
+    {
+        IsValue = BTS7200_IsAdc(pPortId->PortId);
+    }
+}
+
+void BTS7200_DiagnosticChannel2LowCtrl(enum BTS7200_PortType PortId)
+{
+    int IsValue = 0;
+    struct BTS7200_PortStateType *pPortId;
+    if (PortId == BTS7200_PORT_U4100)
+    {
+        pPortId = &myStateInfo.U4100;
+    }
+    else
+    {
+        pPortId = &myStateInfo.U4101;
+    }
+    if (pPortId->OUT2.Level == BTS7200_CHANNEL_LOW)
+    {
+        IsValue = BTS7200_IsAdc(pPortId->PortId);
+    }
+    else
+    {
+        IsValue = BTS7200_IsAdc(pPortId->PortId);
+    }
+}
+
+static void BTS7200_DiagnosticChannel2()
+{
+    static enum BTS7200_LevelType IsCtrlState = BTS7200_CHANNEL_LOW;
+
+    if (myStateInfo.InitInfo != BTS7200_INIT)
+    {
+        return;
+    }
+
+    if (IsCtrlState == BTS7200_CHANNEL_LOW)
+    {
+        BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4100);
+        BTS7200_DiagnosticChannel2LowCtrl(BTS7200_PORT_U4101);
+        IsCtrlState = BTS7200_CHANNEL_HIGH;
+    }
+    else
+    {
+
+        BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4100);
+        BTS7200_DiagnosticChannel2HighCtrl(BTS7200_PORT_U4101);
         IsCtrlState = BTS7200_CHANNEL_LOW;
     }
 
     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT2, IsCtrlState);
     BTS7200_CtrlOut(BTS7200_PORT_U4101, BTS7200_CHANNEL_OUT2, IsCtrlState);
-
-    //关输出 关ctrl情况下
-    //
-    // if (myStateInfo.U4100.OUT1.Level == BTS7200_CHANNEL_LOW)
-    // {
-    //     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_LOW);
-    //     IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-
-    //     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_HIGH);
-
-    //     IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-    //     BTS7200_CtrlOut(BTS7200_PORT_U4100, BTS7200_CHANNEL_OUT1, BTS7200_CHANNEL_LOW);
-    // }
-    // else
-    // {
-    //     // BTS7200_CtrlOut(BTS7200_PORT_U4100,BTS7200_CHANNEL_OUT1,BTS7200_CHANNEL_HIGH);
-    //     IsValue = BTS7200_IsAdc(BTS7200_PORT_U4100);
-    // }
 }
