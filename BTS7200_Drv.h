@@ -77,8 +77,8 @@ struct BTS7200_ChannelStateType
 {
     enum BTS7200_ChannelType ChannelId;
     enum BTS7200_LevelType Level;
-    enum BTS7200_DiagnosticResultType DiagnosticResult;
-    enum BTS7200_DiagnosticDoneType DiagnosticDone;
+    // enum BTS7200_DiagnosticResultType DiagnosticResult;
+    // enum BTS7200_DiagnosticDoneType DiagnosticDone;
 };
 
 struct BTS7200_PortStateType
@@ -108,11 +108,32 @@ struct BTS7200_DiagnosticInfoType
     struct BTS7200_PortDiagnosticType U4101;
 };
 
-struct BTS7200_StateInfoType DiagnosticInfo={
+struct BTS7200_DiagnosticInfoType DiagnosticInfo = {
+    .U4100 = {
+
+        .PortId = BTS7200_PORT_U4100,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+    },
+    .U4101 = {
+        .PortId = BTS7200_PORT_U4101,
+        .OUT1 = {
+            .ChannelId = BTS7200_CHANNEL_OUT1,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+        .OUT2 = {
+            .ChannelId = BTS7200_CHANNEL_OUT2,
+            .Level = BTS7200_CHANNEL_LOW,
+        },
+    }
 
 };
-
-
 
 //函数名：  BTS7200_InitPort
 //功能：    判断当前待插入或更新的记录在原表中是否已经存在
