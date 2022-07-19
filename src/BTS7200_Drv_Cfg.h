@@ -1,0 +1,169 @@
+/**
+ * @copyright Copyright (c) 2020 - 2022, Sankuai
+ * All rights reserved.
+ * @file BTS7200_Drv_Cfg.h
+ * @brief BTS7200驱动的配置文件
+ * @details 需要对负载电阻,电源电压,负载类型进行配置,才能让诊断运行在可用状态
+ * @author sunkailiang，sunkailiang@meituan.com
+ * @date 2022-7-19
+ */
+
+#ifndef BTS7200_DRV_CFG_H_
+#define BTS7200_DRV_CFG_H_
+
+#include "BTS7200_Drv.h"
+#include "IO.h"
+
+/*! @brief 此处配置诊断目标类型是否为高阻 */
+#define BTS7200_HIGH_OUT_RESISTANCE 0
+
+/*! @brief 供电电压 */
+#define BTS7200_VS (float)12
+
+/*! @brief 典型的电流系数 */
+#define BTS7200_KILS (float)667
+
+/*! 分别为不同目标选择诊断参数 */
+#if BTS7200_HIGH_OUT_RESISTANCE
+
+/*! @brief 负载电阻定义 */
+#define BTS7200_RLOAD (float)400000
+
+/*! @brief 偏差范围值 */
+#define BTS7200_ERROR (float)0.5
+
+/*! @brief 打开状态时的IS电压 */
+#define BTS7200_IS (float)0
+#define BTS7200_IS_ERROR (float)0.1
+#define BTS7200_IS_MAX (BTS7200_IS + BTS7200_IS_ERROR)
+#define BTS7200_IS_MIN (BTS7200_IS - BTS7200_IS_ERROR)
+
+/*! @brief 打开状态接地的IS电压 */
+#define BTS7200_IS_GND (float)0
+#define BTS7200_IS_GND_ERROR (float)0.1
+#define BTS7200_IS_GND_MAX (BTS7200_IS_GND + BTS7200_IS_GND_ERROR)
+#define BTS7200_IS_GND_MIN (BTS7200_IS_GND - BTS7200_IS_GND_ERROR)
+
+/*! @brief 打开状态接地的DOH电压 */
+#define BTS7200_DOH_GND (float)0
+#define BTS7200_DOH_GND_ERROR (float)0.1
+#define BTS7200_DOH_GND_MAX (BTS7200_DOH_GND + BTS7200_DOH_GND_ERROR)
+#define BTS7200_DOH_GND_MIN (BTS7200_DOH_GND - BTS7200_DOH_GND_ERROR)
+
+/*! @brief 关闭状态的IS电压 */
+#define BTS7200_IS_CLOSE (float)2.5
+#define BTS7200_IS_CLOSE_ERROR (float)0.2
+#define BTS7200_IS_CLOSE_MAX (BTS7200_IS_CLOSE + BTS7200_IS_CLOSE_ERROR)
+#define BTS7200_IS_CLOSE_MIN (BTS7200_IS_CLOSE - BTS7200_IS_CLOSE_ERROR)
+
+/*! @brief  关闭状态下的DOH电压 */
+#define BTS7200_DOH_CLOSE (BTS7200_VS * 100 / 432)
+#define BTS7200_DOH_CLOSE_ERROR 0.2
+#define BTS7200_DOH_CLOSE_MAX (BTS7200_DOH_CLOSE + BTS7200_DOH_CLOSE_ERROR)
+#define BTS7200_DOH_CLOSE_MIN (BTS7200_DOH_CLOSE - BTS7200_DOH_CLOSE_ERROR)
+
+/*! @brief  打开状态下负载断开的IS电压 */
+#define BTS7200_IS_OL_OPEN (float)0
+#define BTS7200_IS_OL_OPEN_ERROR (float)0.1
+#define BTS7200_IS_OL_OPEN_MAX (BTS7200_IS_OL_OPEN + BTS7200_IS_OL_OPEN_ERROR)
+#define BTS7200_IS_OL_OPEN_MIN (BTS7200_IS_OL_OPEN - BTS7200_IS_OL_OPEN_ERROR)
+
+/*! @brief  关闭状态下负载断开的IS电压 */
+#define BTS7200_IS_OL (float)2.5
+#define BTS7200_IS_OL_ERROR (float)0.2
+#define BTS7200_IS_OL_MAX (BTS7200_IS_OL + BTS7200_IS_OL_ERROR)
+#define BTS7200_IS_OL_MIN (BTS7200_IS_OL - BTS7200_IS_OL_ERROR)
+
+/*! @brief  关闭状态下负载断开的DOH电压 */
+#define BTS7200_DOH_OL (BTS7200_VS * 100 / 432)
+#define BTS7200_DOH_OL_ERROR (float)0.2
+#define BTS7200_DOH_OL_MAX (BTS7200_DOH_OL + BTS7200_DOH_OL_ERROR)
+#define BTS7200_DOH_OL_MIN (BTS7200_DOH_OL - BTS7200_DOH_OL_ERROR)
+
+/*! @brief  错误状态下的IS电压 */
+#define BTS7200_IS_FAULT (float)5.5
+#define BTS7200_IS_FAULT_ERROR (float)1
+#define BTS7200_IS_FAULT_MAX (BTS7200_IS_FAULT + BTS7200_IS_FAULT_ERROR)
+#define BTS7200_IS_FAULT_MIN (BTS7200_IS_FAULT - BTS7200_IS_FAULT_ERROR)
+
+/*! @brief  短接电源时DOH的电压 */
+#define BTS7200_DOH_VS (BTS7200_VS * 100 / 432)
+#define BTS7200_DOH_VS_ERROR (float)0.3
+#define BTS7200_DOH_VS_MAX (BTS7200_DOH_VS + BTS7200_DOH_VS_ERROR)
+#define BTS7200_DOH_VS_MIN (BTS7200_DOH_VS - BTS7200_DOH_VS_ERROR)
+
+#else
+
+/*! @brief 负载电阻定义 */
+#define BTS7200_RLOAD (float)20
+
+/*! @brief 偏差范围值 */
+#define BTS7200_ERROR (float)0.5
+
+/*! @brief 打开状态时的IS电压 */
+#define BTS7200_IS ((BTS7200_VS / BTS7200_RLOAD) / BTS7200_KILS * 1000)
+#define BTS7200_IS_ERROR (float)0.1
+#define BTS7200_IS_MAX (BTS7200_IS + BTS7200_IS_ERROR)
+#define BTS7200_IS_MIN (BTS7200_IS - BTS7200_IS_ERROR)
+
+/*! @brief 打开状态接地的IS电压 */
+#define BTS7200_IS_GND (float)0
+#define BTS7200_IS_GND_ERROR (float)0.1
+#define BTS7200_IS_GND_MAX (BTS7200_IS_GND + BTS7200_IS_GND_ERROR)
+#define BTS7200_IS_GND_MIN (BTS7200_IS_GND - BTS7200_IS_GND_ERROR)
+
+/*! @brief 打开状态接地的DOH电压 */
+#define BTS7200_DOH_GND (float)0
+#define BTS7200_DOH_GND_ERROR (float)0.1
+#define BTS7200_DOH_GND_MAX (BTS7200_DOH_GND + BTS7200_DOH_GND_ERROR)
+#define BTS7200_DOH_GND_MIN (BTS7200_DOH_GND - BTS7200_DOH_GND_ERROR)
+
+/*! @brief 关闭状态的IS电压 */
+
+#define BTS7200_IS_CLOSE (float)0
+#define BTS7200_IS_CLOSE_ERROR (float)0.1
+#define BTS7200_IS_CLOSE_MAX (BTS7200_IS_CLOSE + BTS7200_IS_CLOSE_ERROR)
+#define BTS7200_IS_CLOSE_MIN (BTS7200_IS_CLOSE - BTS7200_IS_CLOSE_ERROR)
+
+/*! @brief  关闭状态下的DOH电压 */
+
+#define BTS7200_DOH_CLOSE (float)0
+#define BTS7200_DOH_CLOSE_ERROR (float)0.1
+#define BTS7200_DOH_CLOSE_MAX (BTS7200_DOH_CLOSE + BTS7200_DOH_CLOSE_ERROR)
+#define BTS7200_DOH_CLOSE_MIN (BTS7200_DOH_CLOSE - BTS7200_DOH_CLOSE_ERROR)
+
+/*! @brief  打开状态下负载断开的IS电压 */
+
+#define BTS7200_IS_OL_OPEN (float)0
+#define BTS7200_IS_OL_OPEN_ERROR (float)0.1
+#define BTS7200_IS_OL_OPEN_MAX (BTS7200_IS_OL_OPEN + BTS7200_IS_OL_OPEN_ERROR)
+#define BTS7200_IS_OL_OPEN_MIN (BTS7200_IS_OL_OPEN - BTS7200_IS_OL_OPEN_ERROR)
+
+/*! @brief  关闭状态下负载断开的IS电压 */
+
+#define BTS7200_IS_OL (float)2.5
+#define BTS7200_IS_OL_ERROR (float)0.2
+#define BTS7200_IS_OL_MAX (BTS7200_IS_OL + BTS7200_IS_OL_ERROR)
+#define BTS7200_IS_OL_MIN (BTS7200_IS_OL - BTS7200_IS_OL_ERROR)
+
+/*! @brief  关闭状态下负载断开的DOH电压 */
+#define BTS7200_DOH_OL (BTS7200_VS * 100 / 432)
+#define BTS7200_DOH_OL_ERROR (float)0.2
+#define BTS7200_DOH_OL_MAX (BTS7200_DOH_OL + BTS7200_DOH_OL_ERROR)
+#define BTS7200_DOH_OL_MIN (BTS7200_DOH_OL - BTS7200_DOH_OL_ERROR)
+
+/*! @brief  错误状态下的IS电压 */
+#define BTS7200_IS_FAULT (float)5.5
+#define BTS7200_IS_FAULT_ERROR (float)1
+#define BTS7200_IS_FAULT_MAX (BTS7200_IS_FAULT + BTS7200_IS_FAULT_ERROR)
+#define BTS7200_IS_FAULT_MIN (BTS7200_IS_FAULT - BTS7200_IS_FAULT_ERROR)
+
+/*! @brief  短接电源时DOH的电压 */
+#define BTS7200_DOH_VS (BTS7200_VS * 100 / 432)
+#define BTS7200_DOH_VS_ERROR (float)0.3
+#define BTS7200_DOH_VS_MAX (BTS7200_DOH_VS + BTS7200_DOH_VS_ERROR)
+#define BTS7200_DOH_VS_MIN (BTS7200_DOH_VS - BTS7200_DOH_VS_ERROR)
+
+#endif
+
+#endif /* BTS7200_CONFIG_H_ */
